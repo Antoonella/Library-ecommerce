@@ -1,14 +1,22 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import Book from '../components/ui/Book';
 import Price from '../components/ui/Price';
 import Rating from '../components/ui/Rating';
 
-function BookInfo({ books }) {
+function BookInfo({ books, addToCart, cart }) {
   const { id } = useParams();
-  const book  = books.find(book => +book.id === +id);
-  console.log(id);
+  const book  = books.find((book) => +book.id === +id);
+
+  function addBookToCart(book) {
+    addToCart(book);
+  }
+
+  function bookExistOnCart() {
+    return cart.find(book => book.id === +id);
+  }
+
   return (
     <div id="books__body">
       <main id="books__main">
@@ -36,14 +44,19 @@ function BookInfo({ books }) {
                   </h3>
                   <p className="book__summary--para">
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui, mollitia obcaecati deleniti et placeat doloribus nostrum debitis nemo voluptate. Saepe atque quaerat vitae suscipit, modi ratione cumque et? Magnam, fuga.
-                  </p>
+                  </p> 
                   <p className="book__summary--para">
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui, mollitia obcaecati deleniti et placeat doloribus nostrum debitis nemo voluptate. Saepe atque quaerat vitae suscipit, modi ratione cumque et? Magnam, fuga.
                   </p>
                 </div>
-                <button className="btn">
-                  Add to Cart
-                </button>
+                {
+                   bookExistOnCart() ? ( 
+                    <Link to={`/cart`} className="book__link">
+                     <button className="btn">Checkout</button>
+                    </Link>
+                   ) : (<button className="btn" onClick={()=> addBookToCart(book)}>Add to Cart</button>)
+                }
+                  
               </div>
             </div>
           </div>
